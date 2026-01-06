@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container mt-4">
+    <h2>Search Results for "{{ query }}"</h2>
+    <hr>
+
+    <!-- FLASH SALE PRODUCTS -->
+    {% if flash_items %}
+        <h4>Flash Sale Products</h4>
+        <div class="row">
+            {% for item in flash_items %}
+                <div class="col-md-3 mt-3">
+                    <div class="card p-3">
+                        <img src="{{ url_for('static', filename=item.image) }}" class="img-fluid">
+                        <h5>{{ item.name }}</h5>
+                        <p>₹{{ item.price }}</p>
+                        <a href="/add_to_cart/{{ item.id }}" class="btn btn-primary btn-sm">Add</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- DATABASE ITEMS -->
+    {% if db_items %}
+        <h4 class="mt-4">Store Products</h4>
+        <div class="row">
+            {% for item in db_items %}
+                <div class="col-md-3 mt-3">
+                    <div class="card p-3">
+                        <h5>{{ item.name }}</h5>
+                        <p>₹{{ item.current_price }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if not db_items and not flash_items %}
+        <p>No matching items found.</p>
+    {% endif %}
+</div>
+{% endblock %}

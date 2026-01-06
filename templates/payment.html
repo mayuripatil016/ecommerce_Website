@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+    body { background: #eef1f6; font-family: 'Segoe UI', sans-serif; }
+    .pay-box { width: 450px; background: #fff; margin: 40px auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .payment-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 12px; border-radius: 25px; border: none; background: #ccc; cursor: pointer; font-weight: bold; }
+    .tab-btn.active { background: #0056ff; color: #fff; }
+    .tab-content { display: none; }
+    .pay-btn { width: 100%; padding: 14px; background: #0056ff; color: #fff; border: none; border-radius: 10px; margin-top: 20px; font-size: 18px; font-weight: bold; cursor: pointer; }
+    .input-box { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; margin-top: 10px; font-size: 16px; }
+</style>
+
+
+<div class="pay-box">
+
+    <div class="payment-tabs">
+        <button class="tab-btn active" onclick="showTab('upi')">UPI</button>
+        <button class="tab-btn" onclick="showTab('gpay')">Google Pay</button>
+        <button class="tab-btn" onclick="showTab('card')">Card</button>
+    </div>
+
+    <!-- UPI -->
+    <div id="upi" class="tab-content" style="display:block;">
+        <h3>Pay with UPI</h3>
+        <input id="upiId" class="input-box" placeholder="test@upi">
+        <button class="pay-btn" onclick="fakeUPI()">Pay with UPI</button>
+    </div>
+
+    <!-- GOOGLE PAY -->
+    <div id="gpay" class="tab-content">
+        <h3>Google Pay</h3>
+        <button class="pay-btn" onclick="fakeGPay()">Pay with Google Pay</button>
+    </div>
+
+    <!-- CARD -->
+    <div id="card" class="tab-content">
+        <h3>Pay using Card</h3>
+        <div id="card-element"></div>
+        <button class="pay-btn" onclick="payCard()">Pay with Card</button>
+    </div>
+
+</div>
+
+
+
+
+<script>
+let stripe = Stripe("pk_test_51STd3RRtAkbJdQPZXvxAdjYXHwbnIMUVoOkzt1ThdFERMmvg1kGhjikH8bbW6XLiHnZknE59d2DTwzCWuoDeIh8400WXrTcYPm");
+let elements = stripe.elements();
+let card = elements.create("card");
+card.mount("#card-element");
+
+
+function showTab(tab) {
+    document.querySelectorAll(".tab-content").forEach(x => x.style.display = "none");
+    document.getElementById(tab).style.display = "block";
+
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+}
+
+/* ---------------- FAKE UPI ---------------- */
+function fakeUPI() {
+    window.location.href = "/success";
+}
+
+/* ---------------- FAKE GPAY ---------------- */
+function fakeGPay() {
+    window.location.href = "/success";
+}
+
+/* ---------------- REAL STRIPE CARD ---------------- */
+async function payCard() {
+    let res = await fetch("/create-card-intent", { method: "POST" });
+    let data = await res.json();
+
+    stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: { card: card },
+    }).then(function(result) {
+        if (result.error) {
+            alert(result.error.message);
+        } else {
+            window.location.href = "/success";
+        }
+    });
+}
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<style>
+    body {
+        background: #eef1f6;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .success-container {
+        width: 500px;
+        margin: 70px auto;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-container img {
+        width: 110px;
+        margin-bottom: 20px;
+    }
+
+    .success-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0A8F44;
+    }
+
+    .success-text {
+        font-size: 18px;
+        color: #555;
+        margin-top: 10px;
+        margin-bottom: 25px;
+    }
+
+    .btn-shop {
+        padding: 14px 25px;
+        background: #007bff;
+        color: white;
+        border-radius: 8px;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-shop:hover {
+        background: #0056cc;
+    }
+</style>
+
+<div class="success-container">
+    
+    <!-- Success tick -->
+    <img src="{{ url_for('static', filename='images/s.jpg') }}" alt="Success">
+
+    <div class="success-title">Payment Successful</div>
+
+    <div class="success-text">
+        🎉 Your order has been placed successfully! <br>
+        Thank you for shopping with us ❤️
+    </div>
+
+    <a href="/amazon/" class="btn-shop">Continue Shopping</a>
+
+</div>
+
+{% endblock %}

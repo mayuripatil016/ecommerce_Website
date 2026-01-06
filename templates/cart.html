@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1 style="text-align:center; margin-top: 30px; font-size:35px;">🛒 Your Cart is Ready to Checkout!</h1>
+
+<div style="
+    width:70%; 
+    margin:auto; 
+    background:#fff; 
+    padding:25px; 
+    border-radius:12px;
+    margin-top:20px;
+">
+
+    {% for item in items %}
+    <div style="
+        display:flex; 
+        gap:20px;
+        padding:15px; 
+        border-bottom:1px solid #ddd;
+        align-items:center;
+    ">
+
+        <!-- PRODUCT IMAGE -->
+        <img src="{{ url_for('static', filename=item.image) }}"
+             style="width:120px; height:120px; object-fit:cover; border-radius:10px;">
+
+        <!-- PRODUCT DETAILS -->
+        <div style="flex:1;">
+            <h2 style="margin:0;">{{ item.item_name }}</h2>
+
+            <p style="font-size:18px; margin:5px 0;">
+                ₹{{ item.price }} × {{ item.quantity }} =
+                <b style="font-size:20px;">₹{{ item.price * item.quantity }}</b>
+            </p>
+
+            <!-- Quantity buttons -->
+            <a href="/decrease_qty/{{ item.id }}"
+               style="padding:6px 14px; background:#333; color:white; text-decoration:none; border-radius:6px; font-size:18px;">−</a>
+
+            <a href="/increase_qty/{{ item.id }}"
+               style="padding:6px 14px; background:#333; color:white; text-decoration:none; border-radius:6px; font-size:18px;">+</a>
+
+            <!-- Remove -->
+            <a href="/remove/{{ item.id }}"
+               style="color:red; margin-left:12px; font-size:18px;">Remove</a>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    <!-- Total Section -->
+    <h2 style="text-align:right; font-size:28px; margin-top:20px;">
+        Total: ₹{{ total }}
+    </h2>
+
+    <!-- Checkout Button -->
+    <form method="POST" action="/payment">
+        <button style="
+            padding:12px 30px; 
+            background:green; 
+            color:white; 
+            border:none; 
+            border-radius:6px; 
+            font-size:20px;
+            margin-top:20px;
+        ">
+            Proceed to Checkout
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+
+

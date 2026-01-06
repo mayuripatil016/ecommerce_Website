@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="container mt-5">
+    <h2>All Orders</h2>
+    <hr>
+
+    {% if orders %}
+        <table class="table table-bordered">
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Total</th>
+            </tr>
+
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.customer.name }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
+                <td>₹{{ order.total_amount }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h4>No orders found.</h4>
+    {% endif %}
+</div>
+
+{% endblock %}
+

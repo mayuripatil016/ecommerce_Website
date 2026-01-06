@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+/* Wishlist + Add button */
+.wishlist-btn, .add-cart-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.wishlist-btn {
+    background: #ff4d4d;
+    color: white;
+}
+
+.wishlist-btn:hover {
+    background: #d90000;
+}
+
+.add-cart-btn {
+    background: #007bff;
+    color: white;
+}
+
+.add-cart-btn:hover {
+    background: #0056b3;
+}
+
+.similar-item img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+</style>
+
+
+<div class="container mt-5">
+
+    <!-- FLASH PRODUCT ALERT -->
+    {% if product.id in flash_products %}
+        <div class="alert alert-info">
+            ⚡ This is a Flash Sale Product.  
+            Reviews & Wishlist are disabled.
+        </div>
+    {% endif %}
+
+    <div class="row">
+
+        <!-- IMAGE -->
+        <div class="col-md-5">
+            <img src="{{ url_for('static', filename=product.image if product.image else 'images/default.png') }}"
+                 class="img-fluid rounded shadow">
+        </div>
+
+        <!-- PRODUCT DETAILS -->
+        <div class="col-md-7">
+            <h2>{{ product.name }}</h2>
+            <h4 style="color:green;">₹{{ product.current_price }}</h4>
+
+            {% if avg_rating %}
+                <p>⭐ {{ avg_rating|round(1) }}/5 ({{ reviews|length }} reviews)</p>
+            {% endif %}
+
+            <!-- WISHLIST (only for DB items) -->
+            {% if product.id not in flash_products %}
+                <button id="wish-btn" data-id="{{ product.id }}" class="wishlist-btn">
+                    {% if saved %} ♥ Saved {% else %} ♡ Save {% endif %}
+                </button>
+            {% endif %}
+
+            <!-- ADD TO CART -->
+            <a href="/add_to_cart/{{ product.id }}">
+                <button class="add-cart-btn ml-2">Add to Cart</button>
+            </a>
+
+            <hr>
+
+            <!-- REVIEW FORM -->
+            {% if product.id in flash_products %}
+                <p class="text-muted">Reviews are not available for flash sale products.</p>
+            {% else %}
+                <h4>Write a Review</h4>
+                <form method="POST" action="/product/{{ product.id }}/review">
+
+                    <select name="rating" required class="form-control w-25">
+                        <option value="1">1 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="5">5 ⭐</option>
+                    </select>
+
+                    <textarea name="comment" required class="form-control mt-2"
+                              placeholder="Write your review"></textarea>
+
+                    <button class="btn btn-success mt-2">Submit</button>
+                </form>
+            {% endif %}
+
+            <hr>
+
+    
+<!-- WISHLIST AJAX -->
+{% if product.id not in flash_products %}
+<script>
+document.getElementById("wish-btn").onclick = function() {
+    let pid = this.dataset.id;
+    fetch("/wishlist/toggle/" + pid, {method: "POST"})
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "added") this.innerText = "♥ Saved";
+            else if (data.status === "removed") this.innerText = "♡ Save";
+            else alert(data.msg);
+        });
+}
+</script>
+{% endif %}
+
+{% endblock %}
+
+
+
+
+

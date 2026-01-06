@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="container mt-5">
+    <h2>Your Orders</h2>
+    <hr>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="border p-3 mb-3 rounded">
+            <h5>Order ID: {{ order.id }}</h5>
+            <p><strong>Date:</strong> {{ order.date_created.strftime('%Y-%m-%d %H:%M') }}</p>
+            <p><strong>Status:</strong> {{ order.status }}</p>
+            <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+
+            <a href="/order/{{ order.id }}" class="btn btn-primary btn-sm">View Details</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h4>No orders found.</h4>
+    {% endif %}
+</div>
+
+{% endblock %}
+
