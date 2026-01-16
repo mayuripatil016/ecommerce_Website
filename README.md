@@ -24,8 +24,8 @@ The website allows users to browse products, add items to cart or wishlist, plac
 ## 🛠️ Technologies Used
 
 ### Frontend
-- HTML5  
-- CSS3  
+- HTML 
+- CSS 
 - JavaScript  
 - Bootstrap  
 - Jinja2 Templates  
